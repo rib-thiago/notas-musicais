@@ -1,3 +1,149 @@
+# Ferramentas de configuração de ambiente de Desenvovlimento
+
+O presente artigo visa descrever o processo de instalação de ferramentas de apoio ao desenvolvimento com python.
+
+
+## Etapas
+
+### 1. Gerenciamento de Dependências
+
+Para o Gerenciamento de Depedências, utilizaremos o [poetry]:
+
+- Instalar o poetry:
+~~~
+curl -sSL https://install.python-poetry.org | python3 -
+~~~
+
+- Criar Pacote com poetry:
+~~~
+poetry new <nome-Pacote>
+~~~
+
+Mesmo com hifen no nome do diretório, o poetry vai criar um pacote com o nome separado por underline, como é a regra para nomes de pacotes.
+
+![estrutura do pacote](assets/poetry_new.png){ width='500' .center }
+
+O nome do diretório continua com hifen por ser mais de digitar, em urls por exemplo.
+
+### 2. Gerenciamento de Repositórios Remotos
+
+Para o Gerenciamento dos Repositórios Remotos, utilizaremos o [gh]:
+
+- Subir o projeto para o github:
+~~~
+gh repo create
+~~~
+
+![comando gh repo create](assets/gh-repo-create.png){ width='500' .center }
+
+
+#### 2.1. Geração de arquivo `.gitignore`
+
+Para a Geração de Arquivo `.gitignore`, utilizaremos o [ignr]:
+
+- Criando arquivo .gitignore com auxilio da ferramenta ignr:
+~~~
+# instalar
+
+pip install ignr
+
+# usar:
+
+ignr -p python >> .gitignore
+~~~
+
+- Adicionar, commitar e fazer push para origin
+~~~
+git add .
+git commit -m "Commit inicial"
+git push origin main
+~~~
+
+### 3. Realização de Testes com Pytest
+
+Para a realização de Testes, utilizaremos o [pytest]:
+
+- Criar grupo para isolar dependencias de desenvolvimento no poetry e instalar [pytest]
+~~~
+poetry add --group dev pytest
+~~~
+
+![poetry add --group](assets/poetry-add-group.png){ width='500' .center }
+![pyproject.toml](assets/pyproject-toml.png){ width='500' .center }
+
+
+#### 3.1. Adcionando cobertura
+
+Para garantir a Cobertura de Testes, utilizaremos o [pytest-cov]. Coverage são importantes para verificar a cobertura de testes no programa. O [pytest-cov] instala o [coverage]
+
+~~~
+poetry add --group dev pytest-cov
+~~~
+
+### 4. Padronização do código
+
+Para a Padronização do Código, regido pela [PEP-8]:
+
+#### 4.1. Verificação de aderência à PEP-8
+
+Formatador de Código [blue] para garantir aderência à [PEP-8]
+
+~~~
+poetry add --group dev blue
+~~~
+
+#### 4.2. Convenção de ordenação de imports 
+
+Ordenação de `imports` com [isort]:
+
+~~~
+poetry add --group dev isort
+~~~
+
+
+### 5. Gerenciamento da Documentação
+
+#### 5.1. Geração de Documentação com [mkdocs]:
+
+##### 5.1.1 Tema da documentação com [mkdocs-material].
+
+Para o Gerenciamento da documentação, criar um novo grupo, para as dependências de documentação.
+~~~
+poetry add --group doc mkdocs-material
+~~~
+
+##### 5.1.2. Utilização de Docstrings para a Documentação com[mkdocstrings].
+
+Para evitar reescrita de texto, aproveitar as docstrings do projeto para criar documentações com a extensão:
+
+~~~
+poetry add --group doc mkdocstrings
+~~~
+
+##### 5.1.3. Extensão para Python com [mkdocstrings-python].
+
+Para definir a linguagem python para a documentação:
+
+~~~
+poetry add --group doc mkdocstrings-python
+~~~
+
+### 6. Automatização de Tarefas
+
+Automatização de Tarefas com [taskipy], para definir scripts para a automatização de tarefas
+
+~~~
+poetry add --group dev taskipy
+~~~
+
+
+### 7. Commitar o `poetry.lock` no Repositório Remoto
+
+O Arquivo `poetry.lock` é o arquivo responsável por capturar as depedências da aplicação,e por isso é uma boa prática commitá-los
+
+
+![potery.lock](assets/lock.png){ width='500' .center }
+
 # Configuração do Ambiente de Desenvolvimento
 
 É sempre uma boa estratégia começar pela configuração da documentação.
