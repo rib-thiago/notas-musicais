@@ -143,7 +143,185 @@ extra_css:
 
 Criar o diretório e arquivo `docs/stylesheets/extra.css`
 
+
+## Configurando a Ferramenta de Documentação `pytest`
+
+As Ferramentas instaladas, com  exceção do `mkdocs` que utiliza seu proprio documento de configuração `mkdocs.yaml`, são configuradas através do `pyproject.toml`:
+
+A estrutura básica de arquivo `pyproject.toml` é:
+
+~~~
+[tool.poetry]
+name = "notas-musicais"
+version = "0.1.0"
+description = ""
+authors = ["Thiago Ribeiro <mackandalls@gmail.comr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+pytest-cov = "^4.1.0"
+blue = "^0.9.1"
+isort = "^5.12.0"
+taskipy = "^1.12.0"
+
+
+[tool.poetry.group.doc.dependencies]
+mkdocs-material = "^9.2.8"
+mkdocstrings = "^0.23.0"
+mkdocstrings-python = "^1.6.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+~~~
+
+Para editar o arquivo `pyproject.toml` seguimos um padrão:
+
+- Abrir colchetes
+- Inserir a palavra-chave `tooll`
+- Adicionar um ponto
+- Inserir o nome da ferramenta
+- Inserir alguma propriedade para a ferramenta
+
+Para o `pytest`, por exemplo:
+
+~~~
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = "--doctest-modules"
+~~~
+
+- `pythonpath` indica o path para execução do `pytest`
+- `addopts` indica as flags a serem adotadas, neste caso, a configuração que valida as dcostrings para serem usadas com o `mkdocs`. É equivalente a executar `pytest --doctest-modules`
+
+Com essa configuração, o `pytest` é capaz de realizar testes nas docstrings
+
+## Configurando as Ferramentas de Padronização do Código
+
+Nesta etapa é realizada a configuração do [blue] e do [isort]
+
+O [blue] não precisa ser configurado em si porque ele já detecta o padrão do código. Para apenas checar o código, usamos a sintaxe:
+
+~~~~
+blue --check .
+~~~~
+
+mas para que a alteração necessária seja indicada, a sintaxe correta é:
+
+~~~
+blue --check --diff .
+~~~
+
+![executando o comando blue --check .](assets/uso-do-blue.png){ width='500' .center }
+
+Já o segundo `linter`, o `isort`, precisa ser configurado. Mas para usá-lo apenas para checar, a sintaxe é semelhante ao `blue`:
+
+~~~
+isort --check .
+~~~
+
+mas para que a alteração necessária seja indicada, a sintaxe correta é:
+
+~~~
+isort --check --diff .
+~~~
+
+![executando o comando isort --check .](assets/uso-isort.png){ width='500' .center }
+
+Fazemos a configuração do [isort] no `pyproject.toml` porque algumas confusões podem ocorrer com o uso combinado de dos `linters`, porque eles não se conversam bem. É preciso definir que um perfil siga o outro. Neste caso, configuramos o [isort] para receber o perfil [black], porque não existe um profile correto para o [blue], mas o [blue] segue o padrão do [black] com ligeiras exceções. Para tal, acrescentamos o trecho a seguir no `pyproject.toml`:
+
+~~~
+[tool.isort]
+profile = "black"
+~~~
+
+O conflito entre [blue] e [black] ocorre na quantidade de caracteres na linha, pois no [blue] o comprimento é de 79 caracteres e no [black] é 88 caracteres. para corrigir isso, modificar o `pyproject.toml`:
+
+~~~
+[tool.isort]
+profile = "black"
+line_lenght = 79
+~~~
+
+## Configurando as Ferramentas de Automação com `taskipy`
+
+Para criarmos uma task com o `taskipy`, editamos o `pyproject.toml` com o seletor `[toll.taskipy.task]`. Para criar uma automação para `lint`, a edição seria:
+
+~~~
+[tool.taskipy.tasks]
+lint = "blue --check --diff . && isort --check --diff ."
+~~~
+
+Com esse comando, basta usar, na linha de comando o comando:
+
+~~~
+task lint
+~~~
+
+Para executar o lint. Neste caso, o operador `&&` indica que o [isort] só rodará se o projeto passar no lint do [blue]
+
+Criar uma task de `docs` pode ser últi para evitar ter que saber a sintaxe para subir o servidor da Docuemntação:
+
+~~~
+[tool.taskipy.tasks]
+lint = "blue --check --diff . && isort --check --diff ."
+docs = "mkdocs serve"
+~~~
+
+Para descobrir quais as task criadas, utilize o comando:
+
+~~~
+task -l
+~~~
+
+É possível criar uma task para rodar o `pytest` com as flags: 
+
+- `-x` = Exit instantly on first error or failed test
+- `-s` = Shortcut for --capture=no 
+    - `--capture=method` = Per-test capturing method: one of fd|sys|no|tee-sys
+- `-v, --verbose` = Increase verbosity
+- `--cov=[SOURCE]` = Path or package name to measure during execution (multi-allowed). Use --cov= to not do any source filtering and record everyhing.
+
+~~~
+[tool.taskipy.tasks]
+lint = "blue --check --diff . && isort --check --diff ."
+docs = "mkdocs serve"
+test = "pytest -s -x --cov=notas_musicais -vv"
+~~~
+ - Já está adotando o `--doctest-modules`
+
+é possível configurar para que o `pytest` gere o coverage após os testes, se eles derem certo:
+
+~~~
+[tool.taskipy.tasks]
+lint = "blue --check --diff . && isort --check --diff ."
+docs = "mkdocs serve"
+test = "pytest -s -x --cov=notas_musicais -vv"
+post_test = "coverage html"
+~~~
+
+e para que o lint seja executado antes de se realizar um teste:
+
+~~~
+[tool.taskipy.tasks]
+lint = "blue --check --diff . && isort --check --diff ."
+docs = "mkdocs serve"
+pre_test = "task lint"
+test = "pytest -s -x --cov=notas_musicais -vv"
+post_test = "coverage html"
+~~~
+
+
+
+
 ___
+
+
 
 
 [poetry]:(https://python-poetry.org/docs/)
