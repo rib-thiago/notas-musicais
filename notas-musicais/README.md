@@ -21,7 +21,7 @@ poetry new <nome-Pacote>
 
 Mesmo com hifen no nome do diretório, o poetry vai criar um pacote com o nome separado por underline, como é a regra para nomes de pacotes.
 
-![estrutura do pacote](assets/poetry_new.png)
+![estrutura do pacote](./docs/assets/poetry_new.png)
 
 O nome do diretório continua com hifen por ser mais de digitar, em urls por exemplo.
 
@@ -34,7 +34,7 @@ Para o Gerenciamento dos Repositórios Remotos, utilizaremos o [gh]:
 gh repo create
 ```
 
-![comando gh repo create](assets/gh-repo-create.png)
+![comando gh repo create](./docs/assets/gh-repo-create.png)
 
 
 #### 2.1. Geração de arquivo `.gitignore`
@@ -68,8 +68,8 @@ Para a realização de Testes, utilizaremos o [pytest]:
 poetry add --group dev pytest
 ```
 
-![poetry add --group](assets/poetry-add-group.png)
-![pyproject.toml](assets/pyproject-toml.png)
+![poetry add --group](./docs/assets/poetry-add-group.png)
+![pyproject.toml](./docs/assets/pyproject-toml.png)
 
 
 #### 3.1. Adcionando cobertura
@@ -142,7 +142,7 @@ poetry add --group dev taskipy
 O Arquivo `poetry.lock` é o arquivo responsável por capturar as depedências da aplicação,e por isso é uma boa prática commitá-los
 
 
-![potery.lock](assets/lock.png)
+![potery.lock](./docs/assets/lock.png)
 
 # Configuração do Ambiente de Desenvolvimento
 
@@ -160,7 +160,7 @@ Para iniciar a configuração da documentação, iniciamos a ferramenta [mkdocs]
 mkdocs new .
 ```
 
-![executando o comando mkdocs new](assets/mkdocs-new.png)
+![executando o comando mkdocs new](./docs/assets/mkdocs-new.png)
 
 A estrtura do Pacote ficou:
 
@@ -187,7 +187,7 @@ Utilizamos o comando `mkdocs serve` para gerar um URL para abrir no Browser a Do
 mkdocs serve
 ```
 
-![executando o comando mkdocs serve](assets/mkdocs-serve.png)
+![executando o comando mkdocs serve](./docs/assets/mkdocs-serve.png)
 
 Para aplicar o tema [mkdocs-material] e utilizar o idioma português, precisamos editar o arquivo `mkdocs.yml`:
 
@@ -223,7 +223,7 @@ theme:
 - edit_uri indica o path exato para editar a documentação
 
 
-Para alterar favicon e logo, primeiro é preciso criar um diretório para os arquivos estáticos dentro de `docs/`, chamado `docs/assets/` e inserir dentro dele o arquivo utilizado para logo e favicon. Após isso, editar novamente o `mkdocs.yaml`:
+Para alterar favicon e logo, primeiro é preciso criar um diretório para os arquivos estáticos dentro de `docs/`, chamado `docs/./docs/assets/` e inserir dentro dele o arquivo utilizado para logo e favicon. Após isso, editar novamente o `mkdocs.yaml`:
 
 ```
 site_name: Notas Musicais
@@ -234,8 +234,8 @@ edit_uri: /tree/main/docs
 theme:
   name: material
   language: pt-BR
-  logo: assets/python.png
-  favicon: assets/python.png
+  logo: ./docs/assets/python.png
+  favicon: ./docs/assets/python.png
 ```
 
 **Para alterar o conteúdo da documentação** editamos o arquivo `docs/index.md`
@@ -257,8 +257,8 @@ edit_uri: /tree/main/docs
 theme:
   name: material
   language: pt-BR
-  logo: assets/python.png
-  favicon: assets/python.png
+  logo: ./docs/assets/python.png
+  favicon: ./docs/assets/python.png
 
 markdown_extensions:
   - attr_list
@@ -277,8 +277,8 @@ edit_uri: /tree/main/docs
 theme:
   name: material
   language: pt-BR
-  logo: assets/python.png
-  favicon: assets/python.png
+  logo: ./docs/assets/python.png
+  favicon: ./docs/assets/python.png
 
 markdown_extensions:
   - attr_list
@@ -363,7 +363,7 @@ mas para que a alteração necessária seja indicada, a sintaxe correta é:
 blue --check --diff .
 ```
 
-![executando o comando blue --check .](assets/uso-do-blue.png)
+![executando o comando blue --check .](./docs/assets/uso-do-blue.png)
 
 Já o segundo `linter`, o `isort`, precisa ser configurado. Mas para usá-lo apenas para checar, a sintaxe é semelhante ao `blue`:
 
@@ -377,7 +377,7 @@ mas para que a alteração necessária seja indicada, a sintaxe correta é:
 isort --check --diff .
 ```
 
-![executando o comando isort --check .](assets/uso-isort.png)
+![executando o comando isort --check .](./docs/assets/uso-isort.png)
 
 Fazemos a configuração do [isort] no `pyproject.toml` porque algumas confusões podem ocorrer com o uso combinado de dos `linters`, porque eles não se conversam bem. É preciso definir que um perfil siga o outro. Neste caso, configuramos o [isort] para receber o perfil [black], porque não existe um profile correto para o [blue], mas o [blue] segue o padrão do [black] com ligeiras exceções. Para tal, acrescentamos o trecho a seguir no `pyproject.toml`:
 
